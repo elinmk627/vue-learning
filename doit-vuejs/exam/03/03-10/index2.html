@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue Event Bus Sample</title>
+  </head>
+  <body>
+    <div id="app">
+      <publisher-component></publisher-component>
+      <subscriber-component></subscriber-component>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.js"></script>
+    <script>
+      // 뷰 인스턴스가 이벤트 버스 역할을 수행함
+      var eventBus = new Vue();
+
+      Vue.component('publisher-component', {
+        template: '<div>하위 컴포넌트 영역입니다.<button v-on:click="showLog">show</button></div>',
+        methods: {
+          showLog: function() {
+            eventBus.$emit('triggerEventBus', 100);
+          }
+        }
+      });
+
+      Vue.component('subscriber-component', {
+        template: '<div>str = {{ str }}</div>',
+        data: function () {
+          return {
+            str: '111'
+          }
+        },
+        created: function() {
+          var self = this;
+          // 콜백함수의 Function Context 인 this는 컴포넌트 객체가 아님
+          eventBus.$on('triggerEventBus', function(value){
+            console.log('triggerEventBus >> cb', value);  // triggerEventBus >> cb 100
+            console.log(this.str);                        // undefined
+            self.str = value;
+          });
+        },
+        methods: {
+          showLog: function() {
+            eventBus.$emit('triggerEventBus', 100);
+          }
+        }
+      });
+
+      var app = new Vue({
+        el: '#app',
+        created: function() {
+          eventBus.$on('triggerEventBus', function(value){
+            console.log("이벤트를 전달 받음. 전달 받은 값 : ", value);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
