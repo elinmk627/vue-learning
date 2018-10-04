@@ -5,7 +5,7 @@ $ vue init webpack-simple
     ? Generate project in current directory? Yes
     ? Project name vue-to-do
     ? Project description A Vue.js project
-    ? Author Mikyung Jeon <mikyung22e@naver.com>
+    ? Author Mikyung Jeon <...@naver.com>
     ? License MIT
     ? Use sass? No
 $ npm i
